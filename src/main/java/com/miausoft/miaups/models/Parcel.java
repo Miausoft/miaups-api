@@ -14,50 +14,50 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="Parcel")
+@Table(name = "Parcel")
 public class Parcel implements Serializable {
 
     @Id
     @GeneratedValue
-    @Column(name="Id")
+    @Column(name = "Id")
     private UUID id;
 
-    @Column(name="Type")
+    @Column(name = "Type")
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryType;
 
     @NotNull
-    @Column(name="Price")
-    private Float price;
-
-    @NotNull
     @ManyToOne
-    @JoinColumn(name="DimensionsId")
+    @JoinColumn(name = "DimensionsId")
     private ParcelDimensions dimensions;
 
-    @Column(name="currentAddress")
+    @OneToOne
+    @JoinColumn(name = "PaymentId")
+    private Payment payment;
+
+    @Column(name = "CurrentAddress")
     private String currentAddress;
 
     @OneToOne
-    @JoinColumn(name = "currentParcelMachineLockerId")
+    @JoinColumn(name = "CurrentParcelMachineLockerId")
     private ParcelMachineLocker currentParcelMachineLocker;
 
     @ManyToOne
-    @JoinColumn(name = "currentWarehouseId")
+    @JoinColumn(name = "CurrentWarehouseId")
     private Warehouse currentWarehouse;
 
-    @Column(name="StartAddress")
+    @Column(name = "StartAddress")
     private String startAddress;
 
-    @Column(name="DestinationAddress")
+    @Column(name = "DestinationAddress")
     private String destinationAddress;
 
     @ManyToOne
-    @JoinColumn(name="StartParcelMachineId")
+    @JoinColumn(name = "StartParcelMachineId")
     private ParcelMachine startParcelMachine;
 
     @ManyToOne
-    @JoinColumn(name="DestinationParcelMachineId")
+    @JoinColumn(name = "DestinationParcelMachineId")
     private ParcelMachine destinationParcelMachine;
 
     @OneToMany(mappedBy = "parcel")

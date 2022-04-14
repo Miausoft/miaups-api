@@ -1,5 +1,6 @@
 package com.miausoft.miaups.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,7 @@ public class ParcelDimensions {
     @Column(name="Price")
     private float price;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dimensions")
     private Set<Parcel> parcels;
 }

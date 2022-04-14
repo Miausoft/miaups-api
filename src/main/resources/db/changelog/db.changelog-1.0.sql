@@ -32,7 +32,7 @@ CREATE TABLE ParcelDimensions(
 );
 
 CREATE TABLE ParcelMachineLocker(
-	Id int NOT NULL,
+	Id int GENERATED ALWAYS AS IDENTITY,
 	PlaceNr int NOT NULL,
 	ParcelMachineId int NOT NULL,
 	Empty boolean NOT NULL,
@@ -41,10 +41,19 @@ CREATE TABLE ParcelMachineLocker(
 	CONSTRAINT UQ_PlaceNr_PM UNIQUE(PlaceNr,ParcelMachineId)
 );
 
+CREATE TABLE Payments(
+	Id int GENERATED ALWAYS AS IDENTITY,
+	PayPalId varchar (255) NOT NULL,
+	Status varchar(255) NOT NULL,
+    Amount float NOT NULL,
+	Currency varchar(3) NOT NULL,
+	CONSTRAINT PK_Payments PRIMARY KEY (Id),
+	CONSTRAINT UC_Payments_PayPal UNIQUE(PayPalId)
+);
+
 CREATE TABLE Parcel(
 	Id UUID DEFAULT gen_random_uuid(),
 	Type varchar(50) NOT NULL,
-	Price float NOT NULL,
 	DimensionsId int NOT NULL,
 	StartAddress varchar(255),
 	DestinationAddress varchar(255),
@@ -53,7 +62,9 @@ CREATE TABLE Parcel(
 	CurrentAddress varchar(255),
 	CurrentParcelMachineLockerId int,
 	CurrentWarehouseId int,
+	PaymentId int NOT NULL,
 	CONSTRAINT PK_Parcel PRIMARY KEY (Id),
+    CONSTRAINT FK_Payment FOREIGN KEY (PaymentId) REFERENCES Payments(Id),
 	CONSTRAINT FK_ParcelDimensions FOREIGN KEY (DimensionsId) REFERENCES ParcelDimensions(Id),
 	CONSTRAINT FK_ParcelStartPM FOREIGN KEY (StartParcelMachineId) REFERENCES ParcelMachine(Id),
 	CONSTRAINT FK_ParcelDestinationPM FOREIGN KEY (DestinationParcelMachineId) REFERENCES ParcelMachine(Id),

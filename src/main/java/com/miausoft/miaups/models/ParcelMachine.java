@@ -1,5 +1,6 @@
 package com.miausoft.miaups.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class ParcelMachine implements Serializable {
     @Column(name="LockersCount")
     private Integer lockersCount;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parcelMachine")
     private Set<ParcelMachineLocker> lockers;
 }
