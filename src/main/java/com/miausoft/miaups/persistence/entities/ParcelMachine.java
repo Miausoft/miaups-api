@@ -1,6 +1,6 @@
-package com.miausoft.miaups.models;
+package com.miausoft.miaups.persistence.entities;
 
-import com.sun.istack.NotNull;
+import com.miausoft.miaups.converter.AddressConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,20 +13,16 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="ParcelMachine")
 public class ParcelMachine implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="Id")
-    private Integer id;
+    @Column(nullable = false)
+    public long id;
 
-    @NotNull
-    @Column(name="Address")
-    private String address;
-
-    @NotNull
-    @Column(name="LockersCount")
-    private Integer lockersCount;
+    @Convert(converter = AddressConverter.class)
+    @Column(nullable = false)
+    private Address address;
 
     @OneToMany(mappedBy = "parcelMachine")
     private Set<ParcelMachineLocker> lockers;

@@ -1,5 +1,6 @@
-package com.miausoft.miaups.models;
+package com.miausoft.miaups.persistence.entities;
 
+import com.miausoft.miaups.converter.AddressConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,15 +12,16 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="Warehouse")
 public class Warehouse {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="Id")
-    private Integer id;
+    @Column(nullable = false)
+    private long id;
 
-    @Column(name = "Address")
-    private String address;
+    @Convert(converter = AddressConverter.class)
+    @Column(nullable = false)
+    private Address address;
 
     @OneToMany(mappedBy = "currentWarehouse")
     private Set<Parcel> storedParcels;
