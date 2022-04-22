@@ -35,4 +35,11 @@ public class Payment {
     @OneToOne
     @JoinColumn(nullable = false, unique = true)
     private Parcel parcel;
+
+    public Payment(String paymentId, BigDecimal amount, String currencyCode){
+        this.paymentId = paymentId;
+        this.amount = amount;
+        this.currencyCode = currencyCode;
+        this.status = PaymentStatus.PENDING;
+    }
 }

@@ -1,4 +1,4 @@
-package com.miausoft.miaups.services;
+package com.miausoft.miaups.paypal;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -16,7 +16,7 @@ public class PayPalService {
     private APIContext apiContext;
 
     public Payment createPayment(
-            Float total,
+            BigDecimal total,
             String currency,
             String method,
             String intent,

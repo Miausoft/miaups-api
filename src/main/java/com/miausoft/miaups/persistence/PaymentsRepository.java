@@ -1,6 +1,6 @@
 package com.miausoft.miaups.persistence;
 
-import com.miausoft.miaups.models.Payment;
+import com.miausoft.miaups.persistence.entities.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

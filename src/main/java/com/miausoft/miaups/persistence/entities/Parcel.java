@@ -56,4 +56,7 @@ public class Parcel implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = false)
     private ParcelMachine destinationParcelMachine;
+
+    @OneToOne(mappedBy = "parcel")
+    private Payment payment;
 }

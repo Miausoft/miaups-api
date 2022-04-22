@@ -1,6 +1,6 @@
 package com.miausoft.miaups.persistence;
 
-import com.miausoft.miaups.models.Parcel;
+import com.miausoft.miaups.persistence.entities.Parcel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

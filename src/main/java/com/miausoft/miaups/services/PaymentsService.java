@@ -1,15 +1,16 @@
 package com.miausoft.miaups.services;
 
 import com.miausoft.miaups.dto.CreateParcelDto;
+import com.miausoft.miaups.enums.PaymentStatus;
 import com.miausoft.miaups.mappers.ParcelMappers;
-import com.miausoft.miaups.models.Parcel;
-import com.miausoft.miaups.models.Payment;
-import com.miausoft.miaups.models.PaymentStatus;
 import com.miausoft.miaups.persistence.ParcelsRepository;
 import com.miausoft.miaups.persistence.PaymentsRepository;
+import com.miausoft.miaups.persistence.entities.Parcel;
+import com.miausoft.miaups.persistence.entities.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -23,7 +24,7 @@ public class PaymentsService {
     ParcelsRepository parcelsRepository;
 
 
-    public void save(CreateParcelDto createParcelDto, String payPalId, Float amount, String currency) {
+    public void save(CreateParcelDto createParcelDto, String payPalId, BigDecimal amount, String currency) {
         Payment payment = new Payment(payPalId, amount, currency);
         paymentsRepository.save(payment);
         Parcel parcel = parcelMappers.fromCreateDtoToParcel(createParcelDto);
@@ -33,7 +34,7 @@ public class PaymentsService {
 
     public UUID paymentCompleted(String payPalPaymentId) {
         Payment payment = paymentsRepository.findByPayPalId(payPalPaymentId);
-        payment.setPaymentStatus(PaymentStatus.COMPLETED);
+        payment.setStatus(PaymentStatus.COMPLETED);
         paymentsRepository.save(payment);
         return payment.getParcel().getId();
     }

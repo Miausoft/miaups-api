@@ -1,8 +1,8 @@
 package com.miausoft.miaups.mappers;
 
 import com.miausoft.miaups.dto.SelectParcelMachinesDto;
-import com.miausoft.miaups.models.ParcelMachine;
-import com.miausoft.miaups.models.ParcelMachineLocker;
+import com.miausoft.miaups.persistence.entities.ParcelMachine;
+import com.miausoft.miaups.persistence.entities.ParcelMachineLocker;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +13,7 @@ public class ParcelMachinesMappers {
         dto.address = parcelMachine.getAddress();
         dto.id = parcelMachine.getId();
         for (ParcelMachineLocker locker: parcelMachine.getLockers()) {
-            if(locker.isEmpty()){
+            if(locker.getStoredParcel() == null){
                 dto.hasEmptyLocker = true;
                 break;
             }

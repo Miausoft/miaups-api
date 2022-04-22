@@ -1,7 +1,7 @@
 package com.miausoft.miaups.controllers;
 
 import com.miausoft.miaups.dto.CreateParcelDto;
-import com.miausoft.miaups.services.PayPalService;
+import com.miausoft.miaups.paypal.PayPalService;
 import com.miausoft.miaups.services.PaymentsService;
 import com.miausoft.miaups.services.PriceCalculatorService;
 import com.paypal.api.payments.Links;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class PayPalController {
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     public ResponseEntity createOrder(@RequestBody CreateParcelDto createParcelDto) {
         try {
-            float price = priceCalculatorService.calculatePrice(createParcelDto);
+            BigDecimal price = priceCalculatorService.calculatePrice(createParcelDto);
 
             Payment payment = paypalService.createPayment(
                     price, paymentCurrency, paymentMethod,
