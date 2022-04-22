@@ -35,9 +35,9 @@ public class PayPalController {
     private String successUrl;
     @Value("${paypal.cancel.url}")
     private String cancelUrl;
-    @Value("${payment.successful.ui.url}")
+    @Value("${payment.on.success.client.redirect}")
     private String redirectUIOnSuccess;
-    @Value("${payment.canceled.ui.url}")
+    @Value("${payment.on.cancel.client.redirect}")
     private String redirectUIOnFailure;
 
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
