@@ -32,8 +32,5 @@ public class ParcelDimensions {
     private double maxHeight;
 
     @Column(nullable = false)
-    private String unit;
-
-    @Column(nullable = false)
     private double price;
 }

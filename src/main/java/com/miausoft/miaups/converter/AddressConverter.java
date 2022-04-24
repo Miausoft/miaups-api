@@ -10,19 +10,27 @@ public class AddressConverter implements AttributeConverter<Address, String> {
 
     @Override
     public String convertToDatabaseColumn(Address attribute) {
-        return attribute.getStreetName()
-                + ","
-                + attribute.getBuildingNumber()
+        if(attribute == null){
+            return null;
+        }
+
+        return attribute.getCountryCode()
                 + ","
                 + attribute.getPostCode()
                 + ","
                 + attribute.getTownName()
                 + ","
-                + attribute.getCountryCode();
+                + attribute.getStreetName()
+                + ","
+                + attribute.getBuildingNumber();
     }
 
     @Override
     public Address convertToEntityAttribute(String dbData) {
+        if(dbData == null){
+            return null;
+        }
+
         String[] address = dbData.split(",");
 
         return new Address(

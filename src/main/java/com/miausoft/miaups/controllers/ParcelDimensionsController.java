@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/parceldimensions")
+@RequestMapping(value = "/parceldimensions")
 public class ParcelDimensionsController {
     @Autowired
     ParcelDimensionsRepository parcelDimensionsRepository;
 
-    @RequestMapping(value = "/",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getAll(){
         return new ResponseEntity(parcelDimensionsRepository.findAll(), HttpStatus.OK);
     }

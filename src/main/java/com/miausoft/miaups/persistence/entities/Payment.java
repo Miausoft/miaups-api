@@ -1,5 +1,6 @@
 package com.miausoft.miaups.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miausoft.miaups.enums.PaymentStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class Payment {
     @Column(nullable = false)
     private PaymentStatus status;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, unique = true)
     private Parcel parcel;
 

@@ -1,6 +1,7 @@
 package com.miausoft.miaups.controllers;
 
 import com.miausoft.miaups.dto.CreateParcelDto;
+import com.miausoft.miaups.enums.DeliveryMethod;
 import com.miausoft.miaups.paypal.PayPalService;
 import com.miausoft.miaups.services.PaymentsService;
 import com.miausoft.miaups.services.PriceCalculatorService;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/api/paypal")
+@RequestMapping(value = "/paypal")
 public class PayPalController {
 
     private final String paymentCurrency = "EUR";
@@ -43,6 +45,15 @@ public class PayPalController {
 
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     public ResponseEntity createOrder(@RequestBody CreateParcelDto createParcelDto) {
+
+        if (!Arrays.asList(DeliveryMethod.HOME_TO_HOME,
+                        DeliveryMethod.HOME_TO_PARCEL_MACHINE,
+                        DeliveryMethod.PARCEL_MACHINE_TO_HOME,
+                        DeliveryMethod.PARCEL_MACHINE_TO_PARCEL_MACHINE).
+                contains(createParcelDto.deliveryMethod)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         try {
             BigDecimal price = priceCalculatorService.calculatePrice(createParcelDto);
 
@@ -50,7 +61,7 @@ public class PayPalController {
                     price, paymentCurrency, paymentMethod,
                     paymentIntent, cancelUrl, successUrl);
 
-            paymentsService.save(createParcelDto,payment.getId(), price, paymentCurrency);
+            paymentsService.createPayment(createParcelDto, payment.getId(), price, paymentCurrency);
 
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
@@ -76,7 +87,7 @@ public class PayPalController {
                 UUID parcelId = paymentsService.paymentCompleted(payment.getId());
 
                 return ResponseEntity.status(HttpStatus.FOUND)
-                        .location(URI.create(redirectUIOnSuccess+"/"+parcelId.toString()))
+                        .location(URI.create(redirectUIOnSuccess + "/" + parcelId.toString()))
                         .build();
             }
         } catch (PayPalRESTException e) {

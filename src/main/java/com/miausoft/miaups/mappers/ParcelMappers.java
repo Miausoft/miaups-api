@@ -1,7 +1,6 @@
 package com.miausoft.miaups.mappers;
 
 import com.miausoft.miaups.dto.CreateParcelDto;
-import com.miausoft.miaups.enums.DeliveryMethod;
 import com.miausoft.miaups.persistence.ParcelDimensionsRepository;
 import com.miausoft.miaups.persistence.ParcelMachinesRepository;
 import com.miausoft.miaups.persistence.entities.Parcel;
@@ -17,7 +16,7 @@ public class ParcelMappers {
 
     public Parcel fromCreateDtoToParcel(CreateParcelDto dto) {
         Parcel parcel = new Parcel();
-        parcel.setDeliveryMethod(DeliveryMethod.values()[dto.deliveryTypeId]);
+        parcel.setDeliveryMethod(dto.deliveryMethod);
         parcel.setDimensions(parcelDimensionsRepository.getById(dto.dimensionsId));
         parcel.setStartAddress(dto.startAddress);
         parcel.setDestinationAddress(dto.destinationAddress);

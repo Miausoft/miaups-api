@@ -19,7 +19,7 @@ public class ParcelMachineLocker implements Serializable {
     public long id;
 
     @Column(nullable = false)
-    private String lockerId;
+    private Integer lockerId;
 
     @ManyToOne
     @JoinColumn(nullable = false)
