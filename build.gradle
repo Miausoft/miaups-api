@@ -23,6 +23,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.paypal.sdk:rest-api-sdk:+'
 
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'mysql:mysql-connector-java'

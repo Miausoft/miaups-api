@@ -1,5 +1,7 @@
 package com.miausoft.miaups.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.miausoft.miaups.converter.AddressConverter;
 import com.miausoft.miaups.enums.DeliveryMethod;
 import lombok.Getter;
@@ -27,33 +29,46 @@ public class Parcel implements Serializable {
     private DeliveryMethod deliveryMethod;
 
     @Convert(converter = AddressConverter.class)
-    @Column(nullable = false)
+    @Column
     private Address startAddress;
 
     @Convert(converter = AddressConverter.class)
-    @Column(nullable = false)
+    @Column
     private Address destinationAddress;
+
+    @JsonIgnoreProperties({"lockers"})
+    @ManyToOne
+    @JoinColumn
+    private ParcelMachine startParcelMachine;
+
+    @JsonIgnoreProperties({"lockers"})
+    @ManyToOne
+    @JoinColumn
+    private ParcelMachine destinationParcelMachine;
+
+    @JsonIgnoreProperties({"storedParcel","parcelMachine"})
+    @OneToOne(mappedBy = "storedParcel")
+    @JoinColumn
+    private ParcelMachineLocker currentParcelMachineLocker;
+
+    @JsonIgnoreProperties({"storedParcels"})
+    @ManyToOne
+    @JoinColumn
+    private Warehouse currentWarehouse;
+
+    @JsonIgnoreProperties({"parcel","id","paymentId"})
+    @OneToOne(mappedBy = "parcel")
+    private Payment payment;
+
+    @JsonIgnoreProperties({"parcel"})
+    @OneToMany(mappedBy = "parcel", orphanRemoval = true)
+    private Set<Delivery> deliveries;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private ParcelDimensions dimensions;
 
-    @OneToMany
-    private Set<ParcelStatusHistory> statusHistory;
-
-    @OneToOne
-    @JoinColumn
-    private ParcelMachineLocker currentParcelMachineLocker;
-
-    @ManyToOne
-    @JoinColumn
-    private Warehouse currentWarehouse;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private ParcelMachine startParcelMachine;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private ParcelMachine destinationParcelMachine;
+    @JsonIgnore
+    @OneToMany(mappedBy = "parcel")
+    private Set<DeliveryRecord> deliveryRecords;
 }

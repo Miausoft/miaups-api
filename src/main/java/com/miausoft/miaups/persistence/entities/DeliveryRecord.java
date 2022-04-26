@@ -1,8 +1,6 @@
 package com.miausoft.miaups.persistence.entities;
 
-import com.miausoft.miaups.converter.AddressConverter;
 import com.miausoft.miaups.enums.DeliveryStatus;
-import com.miausoft.miaups.enums.DeliveryStatusGroup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ParcelStatusHistory implements Serializable {
+public class DeliveryRecord implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,17 +21,13 @@ public class ParcelStatusHistory implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DeliveryStatusGroup deliveryStatusGroup;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private DeliveryStatus deliveryStatus;
 
-    @Convert(converter = AddressConverter.class)
-    @Column(nullable = false)
-    private Address address;
+    @ManyToOne
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "parcel_id")
     private Parcel parcel;
 }
