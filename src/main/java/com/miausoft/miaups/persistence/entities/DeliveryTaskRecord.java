@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DeliveryRecord implements Serializable {
+public class DeliveryTaskRecord implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class DeliveryRecord implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "delivery_id")
-    private Delivery delivery;
+    private DeliveryTask delivery;
 
     @ManyToOne
     @JoinColumn(name = "parcel_id")

@@ -62,7 +62,7 @@ public class Parcel implements Serializable {
 
     @JsonIgnoreProperties({"parcel"})
     @OneToMany(mappedBy = "parcel", orphanRemoval = true)
-    private Set<Delivery> deliveries;
+    private Set<DeliveryTask> deliveryPlan;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
@@ -70,5 +70,5 @@ public class Parcel implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "parcel")
-    private Set<DeliveryRecord> deliveryRecords;
+    private Set<DeliveryTaskRecord> deliveryTaskRecords;
 }
