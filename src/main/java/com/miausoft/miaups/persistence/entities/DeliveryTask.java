@@ -2,7 +2,6 @@ package com.miausoft.miaups.persistence.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.miausoft.miaups.converter.AddressConverter;
-import com.miausoft.miaups.enums.DeliveryMethod;
 import com.miausoft.miaups.enums.DeliveryStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,19 +15,18 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Delivery implements Serializable {
+public class DeliveryTask implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
 
+    @Column(name = "order_in_plan")
+    private Integer order;
+
     @ManyToOne
     @JoinColumn(name = "parcel_id")
     private Parcel parcel;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private DeliveryMethod deliveryMethod;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -64,5 +62,22 @@ public class Delivery implements Serializable {
 
     @JsonIgnoreProperties({"delivery"})
     @OneToMany(mappedBy = "delivery", orphanRemoval = true)
-    private Set<DeliveryRecord> deliveryRecords;
+    private Set<DeliveryTaskRecord> deliveryTaskRecords;
+
+    public DeliveryTask(Integer order, Parcel parcel,
+                        Address startAddress, Address destinationAddress,
+                        ParcelMachineLocker startParcelMachineLocker, ParcelMachineLocker destinationParcelMachineLocker,
+                        Warehouse startWarehouse, Warehouse destinationWarehouse) {
+        this.status = DeliveryStatus.AWAITING;
+        this.order = order;
+        this.parcel = parcel;
+        this.startAddress = startAddress;
+        this.destinationAddress = destinationAddress;
+        this.startParcelMachineLocker = startParcelMachineLocker;
+        this.destinationParcelMachineLocker = destinationParcelMachineLocker;
+        this.startWarehouse = startWarehouse;
+        this.destinationWarehouse = destinationWarehouse;
+    }
+
+
 }

@@ -21,6 +21,9 @@ public class ParcelMachineLocker implements Serializable {
     @Column(nullable = false)
     private Integer lockerId;
 
+    @Column
+    private boolean reserved;
+
     @ManyToOne
     @JoinColumn(nullable = false)
     private ParcelMachine parcelMachine;
