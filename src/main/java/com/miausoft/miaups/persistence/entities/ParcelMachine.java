@@ -1,6 +1,5 @@
 package com.miausoft.miaups.persistence.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miausoft.miaups.converter.AddressConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,17 +33,25 @@ public class ParcelMachine implements Serializable {
     @OneToMany(mappedBy = "parcelMachine")
     private Set<ParcelMachineLocker> lockers;
 
-    public void increaseAvailableLockersCount(){
-        if(availableLockersCount + 1 <= lockersCount){
+    public ParcelMachineLocker reserveFreeLocker() {
+        decreaseAvailableLockersCount();
+        ParcelMachineLocker freeLocker = lockers.stream().filter(x -> !x.isReserved()).findFirst().get();
+        freeLocker.setReserved(true);
+        return freeLocker;
+    }
+
+    public void increaseAvailableLockersCount() {
+        if (availableLockersCount + 1 <= lockersCount) {
             availableLockersCount++;
-        }else{
+        } else {
             throw new RuntimeException("AvailableLockersCount can't be higher than LockersCount");
         }
     }
-    public void decreaseAvailableLockersCount(){
-        if(availableLockersCount + 1 >= 0){
+
+    private void decreaseAvailableLockersCount() {
+        if (availableLockersCount - 1 >= 0) {
             availableLockersCount--;
-        }else{
+        } else {
             throw new RuntimeException("AvailableLockersCount can't be negative");
         }
     }

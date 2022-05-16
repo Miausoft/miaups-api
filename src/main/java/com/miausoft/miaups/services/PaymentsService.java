@@ -2,9 +2,6 @@ package com.miausoft.miaups.services;
 
 import com.miausoft.miaups.dto.CreateParcelDto;
 import com.miausoft.miaups.enums.PaymentStatus;
-import com.miausoft.miaups.mappers.ParcelMappers;
-import com.miausoft.miaups.persistence.ParcelMachinesRepository;
-import com.miausoft.miaups.persistence.ParcelsRepository;
 import com.miausoft.miaups.persistence.PaymentsRepository;
 import com.miausoft.miaups.persistence.entities.Parcel;
 import com.miausoft.miaups.persistence.entities.Payment;
@@ -16,29 +13,17 @@ import java.util.UUID;
 
 @Service
 public class PaymentsService {
-
-    @Autowired
-    ParcelMappers parcelMappers;
     @Autowired
     PaymentsRepository paymentsRepository;
     @Autowired
-    ParcelMachinesRepository parcelMachinesRepository;
+    ParcelService parcelService;
     @Autowired
-    ParcelsRepository parcelsRepository;
+    ParcelMachineService parcelMachineService;
 
-
-    public void createPayment(CreateParcelDto createParcelDto, String paymentId, BigDecimal amount, String currency) {
+    public void createPaymentAndParcel(CreateParcelDto createParcelDto, String paymentId, BigDecimal amount, String currency) {
         Payment payment = new Payment(paymentId, amount, currency);
-        Parcel parcel = parcelMappers.fromCreateDtoToParcel(createParcelDto);
+        Parcel parcel = parcelService.createParcel(createParcelDto);
         payment.setParcel(parcel);
-        if(parcel.getStartParcelMachine() != null){
-            parcel.getStartParcelMachine().decreaseAvailableLockersCount();
-            parcelMachinesRepository.save(parcel.getStartParcelMachine());
-        }
-        if(parcel.getDestinationParcelMachine() != null){
-            parcel.getDestinationParcelMachine().decreaseAvailableLockersCount();
-            parcelMachinesRepository.save(parcel.getDestinationParcelMachine());
-        }
         paymentsRepository.save(payment);
     }
 
@@ -46,6 +31,12 @@ public class PaymentsService {
         Payment payment = paymentsRepository.findByPaymentId(payPalPaymentId);
         payment.setStatus(PaymentStatus.COMPLETED);
         paymentsRepository.save(payment);
+
+        // For the sake of simplicity we assume that Parcel is already in the locker
+        if (payment.getParcel().getStartParcelMachine() != null) {
+            parcelMachineService.insertParcelIntoLocker(payment.getParcel(), payment.getParcel().getStartParcelMachine());
+        }
+
         return payment.getParcel().getId();
     }
 }

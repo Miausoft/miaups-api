@@ -1,12 +1,13 @@
 package com.miausoft.miaups.controllers;
 
-import com.miausoft.miaups.dto.CreateDeliveryPlanDto;
-import com.miausoft.miaups.persistence.ParcelsRepository;
-import com.miausoft.miaups.services.DeliveryPlanService;
+import com.miausoft.miaups.services.ParcelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -14,15 +15,12 @@ import java.util.UUID;
 @RequestMapping(value = "/parcels")
 public class ParcelsController {
     @Autowired
-    ParcelsRepository parcelsRepository;
-
-    @Autowired
-    DeliveryPlanService deliveryPlanService;
+    ParcelService parcelService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getById(@RequestParam("id") UUID id) {
         try {
-            return new ResponseEntity(parcelsRepository.findById(id).get(), HttpStatus.OK);
+            return new ResponseEntity(parcelService.getById(id), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
@@ -30,16 +28,6 @@ public class ParcelsController {
 
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
     public ResponseEntity getAll() {
-        try {
-            return new ResponseEntity(parcelsRepository.findAll(), HttpStatus.OK);
-        } catch (Exception ex) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(value = "/deliveryplan", method = RequestMethod.POST)
-    public ResponseEntity createDeliveryPlan(@RequestBody CreateDeliveryPlanDto dto) {
-        deliveryPlanService.create(dto);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(parcelService.getAll(), HttpStatus.OK);
     }
 }

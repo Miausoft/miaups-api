@@ -8,4 +8,8 @@ public interface ParcelMachineLockersRepository extends JpaRepository<ParcelMach
 
     @Query(value = "SELECT * FROM parcel_machine_locker WHERE parcel_machine_id = ?1 AND reserved = false LIMIT 1",nativeQuery = true)
     ParcelMachineLocker getFreeLocker(Long parcelMachineId);
+
+    @Query(value = "SELECT * FROM parcel_machine_locker WHERE parcel_machine_id = ?1 AND stored_parcel_id IS NULL AND reserved = true LIMIT 1",nativeQuery = true)
+    ParcelMachineLocker getReservedAndEmptyLocker(Long parcelMachineId);
+
 }
