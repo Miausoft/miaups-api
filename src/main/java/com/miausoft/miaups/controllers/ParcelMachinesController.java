@@ -1,6 +1,5 @@
 package com.miausoft.miaups.controllers;
 
-import com.miausoft.miaups.dto.ReturnParcelMachinesDto;
 import com.miausoft.miaups.mappers.ParcelMachinesMappers;
 import com.miausoft.miaups.persistence.ParcelMachinesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
