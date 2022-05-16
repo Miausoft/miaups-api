@@ -15,7 +15,7 @@ public class ParcelDimensionsController {
     ParcelDimensionsRepository parcelDimensionsRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getAll(){
+    public ResponseEntity getAll() {
         return new ResponseEntity(parcelDimensionsRepository.findAll(), HttpStatus.OK);
     }
 }

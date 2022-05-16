@@ -17,7 +17,6 @@ public class PriceCalculatorService {
     public BigDecimal calculatePrice(CreateParcelDto createParcelDto) {
         ParcelDimensions parcelDimensions = parcelDimensionsRepository.findById(createParcelDto.dimensionsId).orElseThrow();
 
-        return new BigDecimal(parcelDimensions.getPrice())
-                .setScale(2, RoundingMode.HALF_UP);
+        return new BigDecimal(parcelDimensions.getPrice()).setScale(2, RoundingMode.HALF_UP);
     }
 }
