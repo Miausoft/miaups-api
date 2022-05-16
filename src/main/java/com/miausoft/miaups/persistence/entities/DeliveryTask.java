@@ -60,14 +60,11 @@ public class DeliveryTask implements Serializable {
     @JoinColumn(name = "destination_warehouse_id")
     private Warehouse destinationWarehouse;
 
-    @JsonIgnoreProperties({"delivery","parcel"})
+    @JsonIgnoreProperties({"delivery", "parcel"})
     @OneToMany(mappedBy = "delivery", orphanRemoval = true)
     private Set<DeliveryTaskRecord> deliveryTaskRecords;
 
-    public DeliveryTask(Integer order, Parcel parcel,
-                        Address startAddress, Address destinationAddress,
-                        ParcelMachineLocker startParcelMachineLocker, ParcelMachineLocker destinationParcelMachineLocker,
-                        Warehouse startWarehouse, Warehouse destinationWarehouse) {
+    public DeliveryTask(Integer order, Parcel parcel, Address startAddress, Address destinationAddress, ParcelMachineLocker startParcelMachineLocker, ParcelMachineLocker destinationParcelMachineLocker, Warehouse startWarehouse, Warehouse destinationWarehouse) {
         this.status = DeliveryStatus.AWAITING;
         this.order = order;
         this.parcel = parcel;
@@ -79,5 +76,27 @@ public class DeliveryTask implements Serializable {
         this.destinationWarehouse = destinationWarehouse;
     }
 
-    
+    public String getHumanReadableStartAddress() {
+        if (startAddress != null) {
+            return startAddress.toString();
+        } else if (startParcelMachineLocker != null) {
+            return startParcelMachineLocker.getParcelMachine().getAddress().toString() + " Locker - " + startParcelMachineLocker.getLockerId();
+        } else if (startWarehouse != null) {
+            return startWarehouse.getAddress().toString();
+        } else {
+            throw new RuntimeException("Can't identify start address");
+        }
+    }
+
+    public String getHumanReadableDestAddress() {
+        if (destinationAddress != null) {
+            return destinationAddress.toString();
+        } else if (destinationParcelMachineLocker != null) {
+            return destinationParcelMachineLocker.getParcelMachine().getAddress().toString() + " Locker - " + destinationParcelMachineLocker.getLockerId();
+        } else if (destinationWarehouse != null) {
+            return destinationWarehouse.getAddress().toString();
+        } else {
+            throw new RuntimeException("Can't identify start address");
+        }
+    }
 }
