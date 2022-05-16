@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.miausoft.miaups.converter.AddressConverter;
 import com.miausoft.miaups.enums.DeliveryMethod;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -46,9 +46,8 @@ public class Parcel implements Serializable {
     @JoinColumn
     private ParcelMachine destinationParcelMachine;
 
-    @JsonIgnoreProperties({"storedParcel","parcelMachine"})
+    @JsonIgnoreProperties({"storedParcel", "parcelMachine"})
     @OneToOne(mappedBy = "storedParcel")
-    @JoinColumn
     private ParcelMachineLocker currentParcelMachineLocker;
 
     @JsonIgnoreProperties({"storedParcels"})
@@ -56,10 +55,11 @@ public class Parcel implements Serializable {
     @JoinColumn
     private Warehouse currentWarehouse;
 
-    @JsonIgnoreProperties({"parcel","id","paymentId"})
+    @JsonIgnoreProperties({"parcel", "id", "paymentId"})
     @OneToOne(mappedBy = "parcel")
     private Payment payment;
 
+    @Getter(AccessLevel.NONE)
     @JsonIgnoreProperties({"parcel"})
     @OneToMany(mappedBy = "parcel", orphanRemoval = true)
     private Set<DeliveryTask> deliveryPlan;
@@ -71,4 +71,12 @@ public class Parcel implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "parcel")
     private Set<DeliveryTaskRecord> deliveryTaskRecords;
+
+    public List<DeliveryTask> getDeliveryPlan(){
+        if (deliveryPlan != null) {
+            return deliveryPlan.stream()
+                    .sorted(Comparator.comparingInt(DeliveryTask::getOrder)).toList();
+        }
+        return null;
+    }
 }

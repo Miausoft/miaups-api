@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -30,4 +31,14 @@ public class DeliveryTaskRecord implements Serializable {
     @ManyToOne
     @JoinColumn(name = "parcel_id")
     private Parcel parcel;
+
+    @Column
+    private LocalDateTime createdAt;
+
+    public DeliveryTaskRecord(DeliveryStatus deliveryStatus, DeliveryTask delivery, Parcel parcel) {
+        this.deliveryStatus = deliveryStatus;
+        this.delivery = delivery;
+        this.parcel = parcel;
+        createdAt = LocalDateTime.now();
+    }
 }

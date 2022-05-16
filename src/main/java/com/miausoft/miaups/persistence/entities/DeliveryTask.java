@@ -40,12 +40,12 @@ public class DeliveryTask implements Serializable {
     @Convert(converter = AddressConverter.class)
     private Address destinationAddress;
 
-    @JsonIgnoreProperties({"storedParcel","parcelMachine"})
+    @JsonIgnoreProperties({"storedParcel"})
     @OneToOne
     @JoinColumn(name = "start_parcel_machine_locker_id")
     private ParcelMachineLocker startParcelMachineLocker;
 
-    @JsonIgnoreProperties({"storedParcel","parcelMachine"})
+    @JsonIgnoreProperties({"storedParcel"})
     @OneToOne
     @JoinColumn(name = "destination_parcel_machine_locker_id")
     private ParcelMachineLocker destinationParcelMachineLocker;
@@ -60,7 +60,7 @@ public class DeliveryTask implements Serializable {
     @JoinColumn(name = "destination_warehouse_id")
     private Warehouse destinationWarehouse;
 
-    @JsonIgnoreProperties({"delivery"})
+    @JsonIgnoreProperties({"delivery","parcel"})
     @OneToMany(mappedBy = "delivery", orphanRemoval = true)
     private Set<DeliveryTaskRecord> deliveryTaskRecords;
 
@@ -79,5 +79,5 @@ public class DeliveryTask implements Serializable {
         this.destinationWarehouse = destinationWarehouse;
     }
 
-
+    
 }
