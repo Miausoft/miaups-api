@@ -1,7 +1,5 @@
 package com.miausoft.miaups.controllers;
 
-import com.miausoft.miaups.mappers.ParcelMachinesMappers;
-import com.miausoft.miaups.persistence.ParcelMachinesRepository;
 import com.miausoft.miaups.persistence.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +16,6 @@ public class WarehouseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getAll() {
-        return new ResponseEntity(warehouseRepository.findAll(),HttpStatus.OK);
+        return new ResponseEntity(warehouseRepository.findAll(), HttpStatus.OK);
     }
 }
