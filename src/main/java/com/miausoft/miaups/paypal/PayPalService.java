@@ -15,13 +15,7 @@ public class PayPalService {
     @Autowired
     private APIContext apiContext;
 
-    public Payment createPayment(
-            BigDecimal total,
-            String currency,
-            String method,
-            String intent,
-            String cancelUrl,
-            String successUrl) throws PayPalRESTException {
+    public Payment createPayment(BigDecimal total, String currency, String method, String intent, String cancelUrl, String successUrl) throws PayPalRESTException {
 
         Amount amount = new Amount(currency, String.format("%.2f", total));
         Transaction transaction = new Transaction();

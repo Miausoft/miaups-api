@@ -1,5 +1,6 @@
 package com.miausoft.miaups.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,13 +22,28 @@ public class ParcelMachineLocker implements Serializable {
     @Column(nullable = false)
     private Integer lockerId;
 
+    @Column
+    private boolean reserved;
+
+    @JsonIgnoreProperties({"lockers"})
     @ManyToOne
     @JoinColumn(nullable = false)
     private ParcelMachine parcelMachine;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
     private Parcel storedParcel;
 
+    public void removeParcel() {
+        storedParcel = null;
+        reserved = false;
+        parcelMachine.increaseAvailableLockersCount();
+    }
+    public void insertParcel(Parcel parcel){
+        if(!reserved){
+            throw new RuntimeException("In order to insert Parcel - Locker must be reserved");
+        }
+        storedParcel = parcel;
+    }
 }
 

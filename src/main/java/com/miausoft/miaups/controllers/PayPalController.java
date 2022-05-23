@@ -46,36 +46,27 @@ public class PayPalController {
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
     public ResponseEntity createOrder(@RequestBody CreateParcelDto createParcelDto) {
 
-        if (!Arrays.asList(DeliveryMethod.HOME_TO_HOME,
-                        DeliveryMethod.HOME_TO_PARCEL_MACHINE,
-                        DeliveryMethod.PARCEL_MACHINE_TO_HOME,
-                        DeliveryMethod.PARCEL_MACHINE_TO_PARCEL_MACHINE).
-                contains(createParcelDto.deliveryMethod)) {
+        if (!Arrays.asList(DeliveryMethod.HOME_TO_HOME, DeliveryMethod.HOME_TO_PARCEL_MACHINE, DeliveryMethod.PARCEL_MACHINE_TO_HOME, DeliveryMethod.PARCEL_MACHINE_TO_PARCEL_MACHINE).contains(createParcelDto.deliveryMethod)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         try {
             BigDecimal price = priceCalculatorService.calculatePrice(createParcelDto);
 
-            Payment payment = paypalService.createPayment(
-                    price, paymentCurrency, paymentMethod,
-                    paymentIntent, cancelUrl, successUrl);
+            Payment payment = paypalService.createPayment(price, paymentCurrency, paymentMethod, paymentIntent, cancelUrl, successUrl);
 
-            paymentsService.createPayment(createParcelDto, payment.getId(), price, paymentCurrency);
+            paymentsService.createPaymentAndParcel(createParcelDto, payment.getId(), price, paymentCurrency);
 
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
-                    return ResponseEntity.status(HttpStatus.OK)
-                            .location(URI.create(link.getHref()))
-                            .build();
+                    return ResponseEntity.status(HttpStatus.OK).location(URI.create(link.getHref())).build();
                 }
             }
 
         } catch (PayPalRESTException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @RequestMapping(value = "/success", method = RequestMethod.GET)
@@ -86,23 +77,17 @@ public class PayPalController {
 
                 UUID parcelId = paymentsService.paymentCompleted(payment.getId());
 
-                return ResponseEntity.status(HttpStatus.FOUND)
-                        .location(URI.create(redirectUIOnSuccess + "/" + parcelId.toString()))
-                        .build();
+                return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUIOnSuccess + "/" + parcelId.toString())).build();
             }
         } catch (PayPalRESTException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create(redirectUIOnFailure))
-                .build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUIOnFailure)).build();
     }
 
     @RequestMapping(value = "/cancel", method = RequestMethod.GET)
     public ResponseEntity cancelPay() {
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create(redirectUIOnFailure))
-                .build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUIOnFailure)).build();
     }
 
 }

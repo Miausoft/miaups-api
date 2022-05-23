@@ -4,6 +4,7 @@ public enum DeliveryMethod {
     HOME_TO_WAREHOUSE,
     PARCEL_MACHINE_TO_WAREHOUSE,
     WAREHOUSE_TO_PARCEL_MACHINE,
+    WAREHOUSE_TO_WAREHOUSE,
     WAREHOUSE_TO_HOME,
 
     // Customer can select only these 4 methods of delivery

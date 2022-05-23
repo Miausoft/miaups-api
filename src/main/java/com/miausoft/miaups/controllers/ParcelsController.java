@@ -1,7 +1,6 @@
 package com.miausoft.miaups.controllers;
 
-import com.miausoft.miaups.mappers.ParcelMappers;
-import com.miausoft.miaups.persistence.ParcelsRepository;
+import com.miausoft.miaups.services.ParcelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +15,19 @@ import java.util.UUID;
 @RequestMapping(value = "/parcels")
 public class ParcelsController {
     @Autowired
-    ParcelsRepository parcelsRepository;
-    @Autowired
-    ParcelMappers parcelMappers;
+    ParcelService parcelService;
 
-    @RequestMapping(value = "",method = RequestMethod.GET)
-    public ResponseEntity getById(@RequestParam("id") UUID id){
-        try{
-            return new ResponseEntity(parcelsRepository.findById(id).get(), HttpStatus.OK);
-        }catch (Exception ex){
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity getById(@RequestParam("id") UUID id) {
+        try {
+            return new ResponseEntity(parcelService.getById(id), HttpStatus.OK);
+        } catch (Exception ex) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    public ResponseEntity getAll() {
+        return new ResponseEntity(parcelService.getAll(), HttpStatus.OK);
     }
 }
