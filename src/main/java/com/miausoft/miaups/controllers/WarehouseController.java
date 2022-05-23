@@ -1,5 +1,7 @@
 package com.miausoft.miaups.controllers;
 
+import com.miausoft.miaups.Role;
+import com.miausoft.miaups.interceptors.Authorize;
 import com.miausoft.miaups.persistence.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ public class WarehouseController {
     WarehouseRepository warehouseRepository;
 
     @RequestMapping(method = RequestMethod.GET)
+    @Authorize(roles = {Role.ADMIN})
     public ResponseEntity getAll() {
         return new ResponseEntity(warehouseRepository.findAll(), HttpStatus.OK);
     }

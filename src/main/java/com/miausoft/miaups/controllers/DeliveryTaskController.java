@@ -1,6 +1,8 @@
 package com.miausoft.miaups.controllers;
 
+import com.miausoft.miaups.Role;
 import com.miausoft.miaups.dto.CreateDeliveryPlanDto;
+import com.miausoft.miaups.interceptors.Authorize;
 import com.miausoft.miaups.services.DeliveryPlanService;
 import com.miausoft.miaups.services.DeliveryTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +19,21 @@ public class DeliveryTaskController {
     DeliveryTaskService service;
 
     @RequestMapping(value = "/create/plan", method = RequestMethod.POST)
+    @Authorize(roles = {Role.ADMIN})
     public ResponseEntity createDeliveryPlan(@RequestBody CreateDeliveryPlanDto dto) {
         deliveryPlanService.createPlan(dto);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/pickup", method = RequestMethod.POST)
+    @Authorize(roles = {Role.ADMIN})
     public ResponseEntity deliveryTaskStarted(@RequestParam Long id) {
         service.setDeliveryTaskStarted(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deliver", method = RequestMethod.POST)
+    @Authorize(roles = {Role.ADMIN})
     public ResponseEntity deliveryTaskCompleted(@RequestParam Long id) {
         service.setDeliveryTaskCompleted(id);
         return new ResponseEntity(HttpStatus.OK);
