@@ -1,5 +1,7 @@
 package com.miausoft.miaups.controllers;
 
+import com.miausoft.miaups.Role;
+import com.miausoft.miaups.interceptors.Authorize;
 import com.miausoft.miaups.services.ParcelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ public class ParcelsController {
     }
 
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    @Authorize(roles = {Role.ADMIN})
     public ResponseEntity getAll() {
         return new ResponseEntity(parcelService.getAll(), HttpStatus.OK);
     }
