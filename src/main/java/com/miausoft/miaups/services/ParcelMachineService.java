@@ -42,4 +42,13 @@ public class ParcelMachineService {
         locker.insertParcel(parcel);
         lockersRepository.save(locker);
     }
+
+    public void removeReservationFromMachine(ParcelMachine parcelMachine) {
+        ParcelMachineLocker machineLocker = lockersRepository.getReservedAndEmptyLocker(parcelMachine.getId());
+        if (machineLocker == null) return;
+        machineLocker.setReserved(false);
+
+        parcelMachine.increaseAvailableLockersCount();
+        machinesRepository.save(parcelMachine);
+    }
 }

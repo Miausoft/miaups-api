@@ -61,16 +61,19 @@ public class Parcel implements Serializable {
 
     @Getter(AccessLevel.NONE)
     @JsonIgnoreProperties({"parcel"})
-    @OneToMany(mappedBy = "parcel", orphanRemoval = true)
+    @OneToMany(mappedBy = "parcel")
     private Set<DeliveryTask> deliveryPlan;
 
     @ManyToOne
-    @JoinColumn(nullable = false, updatable = false)
+    @JoinColumn(nullable = false)
     private ParcelDimensions dimensions;
 
     @JsonIgnore
     @OneToMany(mappedBy = "parcel")
     private Set<DeliveryTaskRecord> deliveryTaskRecords;
+
+    @Version
+    private Integer version;
 
     public List<DeliveryTask> getDeliveryPlan(){
         if (deliveryPlan != null) {

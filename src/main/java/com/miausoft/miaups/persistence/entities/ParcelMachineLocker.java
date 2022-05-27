@@ -30,7 +30,7 @@ public class ParcelMachineLocker implements Serializable {
     @JoinColumn(nullable = false)
     private ParcelMachine parcelMachine;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(unique = true)
     private Parcel storedParcel;
 
