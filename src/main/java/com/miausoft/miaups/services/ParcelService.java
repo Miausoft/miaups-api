@@ -1,6 +1,10 @@
 package com.miausoft.miaups.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miausoft.miaups.dto.CreateParcelDto;
+import com.miausoft.miaups.dto.UpdateParcelDto;
+import com.miausoft.miaups.exceptions.BadRequestException;
+import com.miausoft.miaups.exceptions.ResourceNotFoundException;
 import com.miausoft.miaups.persistence.ParcelDimensionsRepository;
 import com.miausoft.miaups.persistence.ParcelMachinesRepository;
 import com.miausoft.miaups.persistence.ParcelsRepository;
@@ -22,6 +26,8 @@ public class ParcelService {
     ParcelMachinesRepository parcelMachinesRepository;
     @Autowired
     ParcelMachineService parcelMachineService;
+    @Autowired
+    ObjectMapper objectMapper;
 
     public Parcel createParcel(CreateParcelDto dto) {
         Parcel parcel = new Parcel();
@@ -52,6 +58,33 @@ public class ParcelService {
     }
 
     public void save(Parcel parcel){
+        parcelsRepository.save(parcel);
+    }
+
+    public void update(UUID id, UpdateParcelDto parcelDto) {
+        Parcel currentParcel = getById(id);
+        if (currentParcel.getDeliveryPlan().size() > 0) {
+            throw new BadRequestException();
+        }
+        if (currentParcel == null) {
+            throw new ResourceNotFoundException();
+        }
+
+        if (currentParcel.getCurrentParcelMachineLocker() != null) {
+            parcelMachineService.removeParcelFromLocker(currentParcel.getCurrentParcelMachineLocker());
+        }
+        if (currentParcel.getDestinationParcelMachine() != null) {
+            parcelMachineService.removeReservationFromMachine(currentParcel.getDestinationParcelMachine());
+        }
+        Parcel parcel = createParcel(parcelDto);
+
+        parcel.setId(currentParcel.getId());
+        parcel.setVersion(parcelDto.version);
+
+        if (parcel.getStartParcelMachine() != null) {
+            parcelMachineService.insertParcelIntoLocker(currentParcel, parcel.getStartParcelMachine());
+        }
+
         parcelsRepository.save(parcel);
     }
 }

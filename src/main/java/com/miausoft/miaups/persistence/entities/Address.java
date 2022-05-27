@@ -19,6 +19,6 @@ public class Address implements Serializable {
     @Override
     @JsonValue
     public String toString() {
-        return countryCode + "-" + postCode + " " + townName + " " + streetName + " " + buildingNumber;
+        return countryCode + "-" + postCode + "\n" + townName + "\n" + streetName + "\n" + buildingNumber;
     }
 }
