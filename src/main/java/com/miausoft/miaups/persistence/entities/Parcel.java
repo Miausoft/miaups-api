@@ -82,9 +82,4 @@ public class Parcel implements Serializable {
         }
         return null;
     }
-
-    @JsonIgnore
-    public Set<DeliveryTask> getDeliveryPlanSet() {
-        return this.deliveryPlan;
-    }
 }
